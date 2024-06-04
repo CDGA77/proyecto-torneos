@@ -1,7 +1,19 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CreateJugadorDto, UpdateJugadorDto } from '../dtos/index';
 import { JugadoresService } from '../services/jugadores.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('jugadores')
 @Controller('jugadores')
@@ -19,8 +31,10 @@ export class JugadoresController {
   @ApiOperation({ summary: 'Obtener todos los jugadores' })
   @Get()
   @HttpCode(200)
-  async findAll() {
-    const jugadores = await this.jugadoresService.findAll();
+  async findAll(@Query('sort') sort: string) {
+    const jugadores = sort
+      ? await this.jugadoresService.findAllByTorneo(parseInt(sort))
+      : await this.jugadoresService.findAll();
     return jugadores;
   }
 
@@ -29,7 +43,7 @@ export class JugadoresController {
   @HttpCode(200)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const jugador = await this.jugadoresService.findOne(id);
-    if (jugador === null || jugador === undefined) {
+    if (!jugador) {
       throw new NotFoundException(`Jugador with ID ${id} not found`);
     }
     return jugador;
@@ -43,7 +57,7 @@ export class JugadoresController {
     @Body() updateJugadorDto: UpdateJugadorDto,
   ) {
     const jugador = await this.jugadoresService.update(id, updateJugadorDto);
-    if (jugador === null || jugador === undefined) {
+    if (!jugador) {
       throw new NotFoundException(`Jugador with ID ${id} not found`);
     }
     return jugador;

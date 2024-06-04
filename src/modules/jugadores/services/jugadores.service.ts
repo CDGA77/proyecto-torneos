@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateJugadorDto, UpdateJugadorDto } from '../dtos/index';
 import { Jugador } from '../../../entities/jugador.entity';
+
 @Injectable()
 export class JugadoresService {
   constructor(
@@ -27,10 +28,7 @@ export class JugadoresService {
     return jugador;
   }
 
-  async update(
-    id: number,
-    updateJugadorDto: UpdateJugadorDto,
-  ): Promise<Jugador> {
+  async update(id: number, updateJugadorDto: UpdateJugadorDto): Promise<Jugador> {
     const jugador = await this.findOne(id);
     this.jugadorRepository.merge(jugador, updateJugadorDto);
     return this.jugadorRepository.save(jugador);
@@ -39,5 +37,16 @@ export class JugadoresService {
   async remove(id: number): Promise<void> {
     await this.findOne(id);
     await this.jugadorRepository.softDelete(id);
+  }
+
+  async findAllByTorneo(torneoId: number, sort?: string): Promise<Jugador[]> {
+    let queryBuilder = this.jugadorRepository.createQueryBuilder('jugador')
+      .where('jugador.torneoId = :torneoId', { torneoId });
+
+    if (sort) {
+      queryBuilder = queryBuilder.orderBy(`jugador.${sort}`);
+    }
+
+    return queryBuilder.getMany();
   }
 }
