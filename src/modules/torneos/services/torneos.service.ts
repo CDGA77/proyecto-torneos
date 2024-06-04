@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { CreateTorneoDto, UpdateTorneoDto } from '../dtos/index';
-import { Torneo } from '../../entities/torneo.entity';
+import { Torneo } from '../../../entities/torneo.entity';
 
 @Injectable()
 export class TorneosService {
@@ -16,8 +16,12 @@ export class TorneosService {
     return this.torneoRepository.save(torneo);
   }
 
-  async findAll(): Promise<Torneo[]> {
-    return this.torneoRepository.find();
+  async findAll(page: number = 1, limit: number = 10): Promise<Torneo[]> {
+    const options: FindManyOptions<Torneo> = {
+      skip: (page - 1) * limit,
+      take: limit,
+    };
+    return this.torneoRepository.find(options);
   }
 
   async findOne(id: number): Promise<Torneo> {
@@ -37,5 +41,15 @@ export class TorneosService {
   async remove(id: number): Promise<void> {
     await this.findOne(id);
     await this.torneoRepository.softDelete(id);
+  }
+
+  // Métodos adicionales para filtros y ordenamiento
+
+  async findByFilter(filter: any): Promise<Torneo[]> {
+    return this.torneoRepository.find({ where: filter });
+  }
+
+  async findAllSorted(sort: string): Promise<Torneo[]> {
+    return this.torneoRepository.find({ order: { [sort]: 'ASC' } });
   }
 }

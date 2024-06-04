@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateJugadorDto, UpdateJugadorDto } from '../dtos/index';
-import { Jugador } from '../../entities/jugador.entity';
-
+import { Jugador } from '../../../entities/jugador.entity';
 @Injectable()
 export class JugadoresService {
   constructor(

@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('Torneo API')
     .setDescription('API para la gestión de torneos de esports')
     .setVersion('1.0')
-    .addTag('torneo')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
