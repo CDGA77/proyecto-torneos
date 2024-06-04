@@ -1,5 +1,4 @@
-// jugador.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, DeleteDateColumn } from 'typeorm';
 import { Torneo } from './torneo.entity';
 
 @Entity()
@@ -12,4 +11,7 @@ export class Jugador {
 
   @ManyToOne(() => Torneo, (torneo) => torneo.jugadores)
   torneo: Torneo;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

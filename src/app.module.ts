@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TorneosModule } from './torneos/torneos.module';
-import { JugadoresModule } from './jugadores/jugadores.module';
-import { ResultadosModule } from './resultados/resultados.module';
+import { TorneosModule } from './modules/torneos/torneos.module';
+import { JugadoresModule } from './modules/jugadores/jugadores.module';
+import { ResultadosModule } from './modules/resultados/resultados.module';
 import { Torneo } from './entities/torneo.entity';
 import { Jugador } from './entities/jugador.entity';
 import { Resultado } from './entities/resultado.entity';
