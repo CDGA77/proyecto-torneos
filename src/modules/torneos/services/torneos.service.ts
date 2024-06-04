@@ -43,13 +43,19 @@ export class TorneosService {
     await this.torneoRepository.softDelete(id);
   }
 
-  // Métodos adicionales para filtros y ordenamiento
-
   async findByFilter(filter: any): Promise<Torneo[]> {
     return this.torneoRepository.find({ where: filter });
   }
 
   async findAllSorted(sort: string): Promise<Torneo[]> {
     return this.torneoRepository.find({ order: { [sort]: 'ASC' } });
+  }
+
+  // Métodos para la creación de datos de ejemplo (seeds)
+  async seedTorneos(torneos: CreateTorneoDto[]): Promise<Torneo[]> {
+    const createdTorneos = await Promise.all(
+      torneos.map((torneo) => this.create(torneo)),
+    );
+    return createdTorneos;
   }
 }

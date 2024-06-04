@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { CreateTorneoDto, UpdateTorneoDto } from '../dtos/index';
 import { TorneosService } from '../services/torneos.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -22,12 +35,20 @@ export class TorneosController {
   @Get()
   @HttpCode(200) // Código 200 para Respuesta Exitosa
   @UseGuards(ApiKeyGuard)
-  async findAll() {
-    const torneos = await this.torneosService.findAll();
+  async findAll(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('sort') sort: string,
+  ) {
+    if (sort) {
+      const torneos = await this.torneosService.findAllSorted(sort);
+      return torneos;
+    }
+    const torneos = await this.torneosService.findAll(page, limit);
     return torneos; // Devuelve la lista de torneos
   }
 
-  @ApiOperation({ summary: 'Obtener un torneo por ID' })
+  @ApiOperation({ summary: 'Obtener un torneo por su ID' })
   @Get(':id')
   @HttpCode(200) // Código 200 para Respuesta Exitosa
   @UseGuards(ApiKeyGuard)
@@ -36,7 +57,7 @@ export class TorneosController {
     return torneo; // Devuelve el torneo encontrado
   }
 
-  @ApiOperation({ summary: 'Actualizar un torneo por ID' })
+  @ApiOperation({ summary: 'Actualizar un torneo por su ID' })
   @Put(':id')
   @HttpCode(200) // Código 200 para Respuesta Exitosa
   @UseGuards(ApiKeyGuard)
@@ -48,7 +69,7 @@ export class TorneosController {
     return torneo; // Devuelve el torneo actualizado
   }
 
-  @ApiOperation({ summary: 'Eliminar un torneo por ID' })
+  @ApiOperation({ summary: 'Eliminar un torneo por su ID' })
   @Delete(':id')
   @HttpCode(204) // Código 204 para Sin Contenido
   @UseGuards(ApiKeyGuard)

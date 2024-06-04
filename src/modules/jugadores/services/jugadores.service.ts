@@ -28,7 +28,10 @@ export class JugadoresService {
     return jugador;
   }
 
-  async update(id: number, updateJugadorDto: UpdateJugadorDto): Promise<Jugador> {
+  async update(
+    id: number,
+    updateJugadorDto: UpdateJugadorDto,
+  ): Promise<Jugador> {
     const jugador = await this.findOne(id);
     this.jugadorRepository.merge(jugador, updateJugadorDto);
     return this.jugadorRepository.save(jugador);

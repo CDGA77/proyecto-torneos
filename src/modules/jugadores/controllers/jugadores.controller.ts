@@ -1,16 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  NotFoundException,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { CreateJugadorDto, UpdateJugadorDto } from '../dtos/index';
 import { JugadoresService } from '../services/jugadores.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -22,7 +10,6 @@ export class JugadoresController {
 
   @ApiOperation({ summary: 'Crear un nuevo jugador' })
   @Post()
-  @HttpCode(201)
   async create(@Body() createJugadorDto: CreateJugadorDto) {
     const jugador = await this.jugadoresService.create(createJugadorDto);
     return jugador;
@@ -30,42 +17,30 @@ export class JugadoresController {
 
   @ApiOperation({ summary: 'Obtener todos los jugadores' })
   @Get()
-  @HttpCode(200)
-  async findAll(@Query('sort') sort: string) {
-    const jugadores = sort
-      ? await this.jugadoresService.findAllByTorneo(parseInt(sort))
-      : await this.jugadoresService.findAll();
+  async findAll(@Query('torneoId') torneoId: number, @Query('sort') sort: string) {
+    const jugadores = torneoId ? await this.jugadoresService.findAllByTorneo(torneoId, sort) : await this.jugadoresService.findAll();
     return jugadores;
   }
 
   @ApiOperation({ summary: 'Obtener un jugador por su ID' })
   @Get(':id')
-  @HttpCode(200)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const jugador = await this.jugadoresService.findOne(id);
-    if (!jugador) {
-      throw new NotFoundException(`Jugador with ID ${id} not found`);
-    }
     return jugador;
   }
 
   @ApiOperation({ summary: 'Actualizar un jugador por su ID' })
   @Put(':id')
-  @HttpCode(200)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateJugadorDto: UpdateJugadorDto,
   ) {
     const jugador = await this.jugadoresService.update(id, updateJugadorDto);
-    if (!jugador) {
-      throw new NotFoundException(`Jugador with ID ${id} not found`);
-    }
     return jugador;
   }
 
   @ApiOperation({ summary: 'Eliminar un jugador por su ID' })
   @Delete(':id')
-  @HttpCode(204)
   async remove(@Param('id', ParseIntPipe) id: number) {
     await this.jugadoresService.remove(id);
     return;
