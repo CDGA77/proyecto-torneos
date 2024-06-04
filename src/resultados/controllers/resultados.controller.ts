@@ -8,9 +8,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateResultadoDto, UpdateResultadoDto } from '../dtos/index';
-
 import { ResultadosService } from '../services/resultados.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('resultados')
 @Controller('resultados')
 export class ResultadosController {
   constructor(private readonly resultadosService: ResultadosService) {}

@@ -10,14 +10,17 @@ import { Resultado } from './entities/resultado.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres', // u otro tipo de base de datos que utilices
-      host: 'localhost',
-      port: 5432, // puerto de tu base de datos
-      username: 'danielgaviria', // tu nombre de usuario
-      password: 'Gaviria77', // tu contraseña
-      database: 'torneos', // nombre de tu base de datos
+      type: 'postgres',
+      host: 'ep-cool-math-a4goen12-pooler.us-east-1.aws.neon.tech',
+      port: 5432,
+      username: 'default',
+      password: 'mGUVjIB5XTf0',
+      database: 'verceldb',
       entities: [Torneo, Jugador, Resultado],
-      synchronize: true, // Sincronizar las entidades con la base de datos (no recomendado para producción)
+      synchronize: true,
+      extra: {
+        ssl: true,
+      },
     }),
     TorneosModule,
     JugadoresModule,

@@ -9,11 +9,14 @@ import {
 } from '@nestjs/common';
 import { CreateTorneoDto, UpdateTorneoDto } from '../dtos/index';
 import { TorneosService } from '../services/torneos.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('torneos')
 @Controller('torneos')
 export class TorneosController {
   constructor(private readonly torneosService: TorneosService) {}
 
+  @ApiOperation({ summary: 'Crear un administrador' })
   @Post()
   create(@Body() createTorneoDto: CreateTorneoDto) {
     return this.torneosService.create(createTorneoDto);
